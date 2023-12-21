@@ -1,6 +1,8 @@
 import React from 'react'
 import './Create.css'
 import { useState, useRef, useEffect } from 'react'
+import { useFetch } from "../../hooks/useFetch"
+import { useNavigate } from 'react-router-dom';
 
 export default function Create() {
   //定義表單資料變數
@@ -11,6 +13,9 @@ export default function Create() {
   const [ingredients, setIngredients] = useState([])
   //選取DOM元素
   const ingredientInput = useRef(null)
+
+  const { postData, data } = useFetch('http://localhost:3000/recipes', 'POST')
+  const navigate = useNavigate();
 
   const addIngredient = (e) => {
     e.preventDefault()
@@ -24,15 +29,14 @@ export default function Create() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // postData({ title, ingredients, method, cookingTime: cookingTime + ' minutes' })
+    postData({ title, ingredients, method, cookingTime: cookingTime + ' 分鐘' })
   }
 
-  // redirect the user when we get data response
-  // useEffect(() => {
-  //   if (data) {
-  //     history.push('/')
-  //   }
-  // }, [data, history])
+  useEffect(() => {
+    if (data) {
+      navigate('/')
+    }
+  }, [data, navigate])
 
 
   return (
