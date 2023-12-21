@@ -4,6 +4,11 @@ import { Link } from 'react-router-dom'
 import './RecipeList.css'
 
 export default function RecipeList({ recipes }) {
+
+  if(recipes.length===0){
+    return <p className="error">查無相關食譜</p>
+  }
+
   return (
     <div className="recipe-list">
       {recipes.map(recipe => (
