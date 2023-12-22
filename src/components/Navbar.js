@@ -1,13 +1,17 @@
 import { NavLink } from 'react-router-dom'
 import './Navbar.css'
 import Searchbar from './Searchbar'
-// 在Context.Provider範圍的子元件中載入Context和useContext
-import { useContext } from 'react'
-import { ThemeContext } from '../context/ThemeContext'
+// // 在Context.Provider範圍的子元件中載入Context和useContext
+// import { useContext } from 'react'
+// import { ThemeContext } from '../context/ThemeContext'
+
+// 改為載入自定義的hook"useTheme"
+import { useThemeContext } from '../hooks/useThemeContext'
 
 export default function Navbar() {
   // 解構Context.Provider組件的內容
-  const { color } = useContext(ThemeContext)
+  // const { color } = useContext(ThemeContext)
+  const { color } = useThemeContext()
   return (
     // 應用解構變數
     <div className="navbar" style={{ backgroundColor: color }}>
