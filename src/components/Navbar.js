@@ -13,9 +13,9 @@ export default function Navbar() {
   // 解構Context.Provider組件的內容 #context
   // const { color } = useContext(ThemeContext)
   const { color , setColor } = useThemeContext()
-  useState(()=>{
-    setColor('orange');
-  },[])
+  // useState(()=>{
+  //   setColor('orange');
+  // },[])
   
   return (
     // 應用解構變數
