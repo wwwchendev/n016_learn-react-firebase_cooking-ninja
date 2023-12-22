@@ -5,13 +5,18 @@ import Searchbar from './Searchbar'
 // import { useContext } from 'react'
 // import { ThemeContext } from '../context/ThemeContext'
 
-// 改為載入自定義的hook"useTheme"
+// 改為載入自定義的hook"useTheme" #context
 import { useThemeContext } from '../hooks/useThemeContext'
+import { useState } from 'react'
 
 export default function Navbar() {
-  // 解構Context.Provider組件的內容
+  // 解構Context.Provider組件的內容 #context
   // const { color } = useContext(ThemeContext)
-  const { color } = useThemeContext()
+  const { color , setColor } = useThemeContext()
+  useState(()=>{
+    setColor('orange');
+  },[])
+  
   return (
     // 應用解構變數
     <div className="navbar" style={{ backgroundColor: color }}>
