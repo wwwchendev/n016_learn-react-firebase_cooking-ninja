@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/n016_learn-react-firebase_cooking-ninja/static/css/main.1fbe6a12.css",
+    "main.js": "/n016_learn-react-firebase_cooking-ninja/static/js/main.f45b5bb9.js",
+    "index.html": "/n016_learn-react-firebase_cooking-ninja/index.html",
+    "static/media/mode-icon.svg": "/n016_learn-react-firebase_cooking-ninja/static/media/mode-icon.651cf79205ce37eeacd56da0aef056a9.svg",
+    "main.1fbe6a12.css.map": "/n016_learn-react-firebase_cooking-ninja/static/css/main.1fbe6a12.css.map",
+    "main.f45b5bb9.js.map": "/n016_learn-react-firebase_cooking-ninja/static/js/main.f45b5bb9.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1fbe6a12.css",
+    "static/js/main.f45b5bb9.js"
+  ]
+}
