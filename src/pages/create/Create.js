@@ -1,8 +1,9 @@
-import React from 'react'
-import './Create.css'
 import { useState, useRef, useEffect } from 'react'
-import { useFetch } from "../../hooks/useFetch"
 import { useNavigate } from 'react-router-dom';
+import './Create.css'
+// import { useFetch } from "../../hooks/useFetch"
+import { firestore } from '../../firebase/config';
+import { collection, addDoc, getDoc} from 'firebase/firestore';
 
 export default function Create() {
   //定義表單資料變數
@@ -14,7 +15,7 @@ export default function Create() {
   //選取DOM元素
   const ingredientInput = useRef(null)
 
-  const { postData, data } = useFetch('http://localhost:3000/recipes', 'POST')
+  // const { postData, data } = useFetch('http://localhost:3000/recipes', 'POST')
   const navigate = useNavigate();
 
   const addIngredient = (e) => {
@@ -27,17 +28,20 @@ export default function Create() {
     ingredientInput.current.focus()
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    postData({ title, ingredients, method, cookingTime: cookingTime + ' 分鐘' })
-  }
-
-  useEffect(() => {
-    if (data) {
+    // postData({ title, ingredients, method, cookingTime: cookingTime + ' 分鐘' })
+    const doc = { title, ingredients, method, cookingTime: cookingTime + ' 分鐘' }
+    try {
+      const recipesCollectionRef = collection(firestore, 'recipes');
+      const res = await addDoc(recipesCollectionRef, doc);
+      const snapshot = await getDoc(res);
+      alert(`已新增 ${snapshot.data().title} 的食譜`);
       navigate('/')
+    } catch (error) {
+      console.error('Error adding recipe:', error);
     }
-  }, [data, navigate])
-
+  }
 
   return (
     <div className="create">
