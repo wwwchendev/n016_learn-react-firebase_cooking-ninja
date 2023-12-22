@@ -22,6 +22,8 @@ const themeReducer = (state, action) => {
     switch (action.type) {
         case 'SET_COLOR':
             return { ...state, color: action.payload };
+        case 'SET_MODE':
+            return { ...state, mode: action.payload };
         default:
             return state;
     }
@@ -30,7 +32,8 @@ const themeReducer = (state, action) => {
 export function ThemeProvider({ children }) {
     // 使用useReducer管理狀態，並定義useReducer #reducer 
     const [state, dispatch] = useReducer(themeReducer, {
-        color: "blue",
+        color: "#D26354",
+        mode: "light"
     })
 
     // 建立改變某項狀態的方法(透過調用dispatch來改變狀態)
@@ -41,9 +44,16 @@ export function ThemeProvider({ children }) {
         })
     }
 
+    const setMode = (mode) => {
+        dispatch({
+            type: 'SET_MODE',
+            payload: mode
+        })
+    }
+
     return (
         // 把狀態和改變狀態的方法都提供給子組件
-        <ThemeContext.Provider value={{ ...state, setColor }}>
+        <ThemeContext.Provider value={{ ...state, setColor,setMode  }}>
             {children}
         </ThemeContext.Provider>
     )

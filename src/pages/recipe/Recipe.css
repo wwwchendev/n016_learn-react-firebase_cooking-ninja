@@ -15,7 +15,6 @@
 .recipe li {
   list-style-type: none;
   margin-right: 10px;
-  color: #777;
 }
 .recipe li::after {
   content: ",";
@@ -26,4 +25,9 @@
 .method {
   text-align: left;
   line-height: 1.5em;
+}
+/* dark mode */
+.recipe.dark {
+  background: #555;
+  color: #e4e4e4;
 }
