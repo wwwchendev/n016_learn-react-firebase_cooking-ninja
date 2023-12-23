@@ -1,7 +1,11 @@
-import { useFetch } from "../../hooks/useFetch"
+import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
+// import { useFetch } from "../../hooks/useFetch"
 import RecipeList from "../../components/RecipeList"
+
 import './Search.css'
+import { firestore } from '../../firebase/config';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 export default function Search() {
   // 使用 useLocation 來獲取搜尋參數的UTF-8編碼
@@ -10,7 +14,7 @@ export default function Search() {
   // 建立`URLSearchParams`物件對URL中的 query string做解析和操作
   // 使用 get() 方法取得指定參數的值
   const queryParams = new URLSearchParams(queryString)
-  const query = queryParams.get('q')
+  const queryWord = queryParams.get('q')
 
   /* 
   JSON Server預設使用q作為搜尋關鍵字的query參數，會返回所有value包含關鍵字的資料
@@ -18,15 +22,51 @@ export default function Search() {
   ?"key"       返回指定欄位與檢索字串完全相符的資料
   ?"key"_like 返回指定欄位中包含該檢索字串的資料
   */
-  const url = 'http://localhost:3000/recipes?q=' + query
+  // const url = 'http://localhost:3000/recipes?q=' + query
   // const url = 'http://localhost:3000/recipes?title_like=' + query
-  const { error, isPending, data } = useFetch(url)
+  // const { error, isPending, data } = useFetch(url)
+
+  // 定義資料請求狀態
+  const [resultDatas, setResultDatas] = useState(null)
+  const [isPending, setIsPending] = useState(false)
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    const searchRecipes = async () => {      
+      setIsPending(true)
+      setError(null);
+
+      const recipesCollection = collection(firestore, 'recipes');
+      const searchQuery = queryWord
+        ? queryWord.toLowerCase() // 可能需要先轉為小寫或符合你的資料結構
+        : '';
+
+      try {
+        const recipesSnapshot = await getDocs(
+          searchQuery
+          ?         
+          query(recipesCollection, where('title', '>=', searchQuery), where('title', '<=', searchQuery + '\uf8ff'))
+          : recipesCollection
+        );
+
+        const recipesData = recipesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        setResultDatas(recipesData);
+      } catch (error) {
+        console.log(error);
+        setError(error.message);
+      }      
+      setIsPending(false);
+    };
+    searchRecipes();
+  }, [queryWord]);
+
+
   return (
     <div>
-      <h2 className="page-title">為您搜尋包含 "{query}" 的食譜</h2>
+      <h2 className="page-title">為您搜尋包含 "{queryWord}" 的食譜</h2>
       {error && <p className="error">{error}</p>}
       {isPending && <p className="loading">Loading...</p>}  
-      {data && <RecipeList recipes={data} />}
+      {resultDatas && <RecipeList recipes={resultDatas} />}
     </div>
   )
 }
