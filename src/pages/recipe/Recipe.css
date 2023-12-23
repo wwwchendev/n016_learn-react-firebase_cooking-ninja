@@ -5,6 +5,7 @@
   background: #fff;
   padding: 40px;
   box-sizing: border-box;
+  position: relative;
 }
 .recipe ul {
   display: flex;
@@ -25,6 +26,49 @@
 .method {
   text-align: left;
   line-height: 1.5em;
+}
+.editIcon{
+  position: absolute;
+  top:20px;
+  right: 30px;
+  cursor: pointer;
+  filter: invert(60%);
+}
+
+.recipe form{  
+  color: #555;
+  max-width: 480px;
+  margin: 0px auto;
+  text-align: left;
+}
+.recipe form label span {
+  display: block;
+  margin: 30px 0 10px;
+}
+.recipe form p {
+  margin-top: 10px;
+  font-size: 0.8em;
+}
+.recipe form button {
+  display: block;
+  width: 100px;
+  font-size: 1em;
+  color: #fff;
+  padding: 8px 20px;
+  border: 0;
+  border-radius: 4px;
+  background-color: #58249c;
+  cursor: pointer;
+  text-decoration: none;
+  margin: 20px auto;
+}
+.ingredients {
+  display: flex;
+  align-items: center;
+}
+.ingredients .btn {
+  margin: 0 0 0 10px;
+  text-wrap:nowrap;
 }
 /* dark mode */
 .recipe.dark {

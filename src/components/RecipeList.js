@@ -34,7 +34,7 @@ export default function RecipeList({ recipes, }) {
         <div key={recipe.id} className={`card ${mode}`}>
           <h3>{recipe.title}</h3>
           <p>上菜時間 {recipe.cookingTime}</p>
-          <div>{recipe.method.substring(0, 100)}...</div>
+          <div>{recipe.method.substring(0, 40)}...</div>
           <Link to={`/recipes/${recipe.id}`}>查看食譜</Link>
           <img 
             className="delete"
