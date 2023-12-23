@@ -2,3 +2,19 @@
   max-width: 1200px;
   margin: 0px auto;
 }
+
+.recipe-list .card button {
+  color: #555;
+  text-decoration: none;
+  display: block;
+  background: #e2e2e2;
+  font-size: 0.9em;
+  text-align: center;
+  padding: 8px 20px;
+  border-radius: 4px;
+  margin: 20px auto 0;
+  margin-top: auto;
+  border: none;
+  cursor: pointer;
+  text-wrap: nowrap;
+}

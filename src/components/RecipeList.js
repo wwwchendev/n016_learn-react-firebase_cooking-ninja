@@ -7,7 +7,7 @@ import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import './RecipeList.css'
 import Trashcan from '../assets/trashcan.svg'
 
-export default function RecipeList({ recipes, }) {
+export default function RecipeList({ recipes,children }) {
   const { mode } = useThemeContext()
 
   if(recipes.length===0){
@@ -43,6 +43,7 @@ export default function RecipeList({ recipes, }) {
           />
         </div>
       ))}
+      { children && <><div className={`card ${mode}`}>{children}</div></>}
     </div>
   )
 }
