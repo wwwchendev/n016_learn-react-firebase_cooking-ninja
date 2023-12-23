@@ -42,15 +42,29 @@ export default function Search() {
         : '';
 
       try {
-        const recipesSnapshot = await getDocs(
-          searchQuery
-          ?         
-          query(recipesCollection, where('title', '>=', searchQuery), where('title', '<=', searchQuery + '\uf8ff'))
-          : recipesCollection
-        );
+        //取得快照
+        const searchByTagsPromise = getDocs( query(recipesCollection, where('tags', 'array-contains', searchQuery))
+        );      
+        const searchByTitlePromise = getDocs( query(recipesCollection, where('title', '>=', searchQuery), where('title', '<=', searchQuery + '\uf8ff'))
+        );      
+        //並行執行多個非同步操作提高性能
+        const [searchByTagsSnapshot, searchByTitleSnapshot] = await Promise.all([ searchByTagsPromise, searchByTitlePromise ]);
+      
+        //根據快照提取資料
+        const searchByTagsData = searchByTagsSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        const searchByTitleData = searchByTitleSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));      
 
-        const recipesData = recipesSnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-        setResultDatas(recipesData);
+        //合併資料
+        const combinedData = [...searchByTagsData, ...searchByTitleData];
+
+        //建立Map利用鍵值對將資料以ID作為唯一key，確保合併後的資料中不包含重複ID。
+        const uniqueDataMap = new Map();        
+        combinedData.forEach((data) => {
+          uniqueDataMap.set(data.id, data);
+        });              
+        //將uniqueDataMap的值轉為陣列後設為最後搜尋結果
+        const uniqueDataArray = [...uniqueDataMap.values()];
+        setResultDatas(uniqueDataArray)
       } catch (error) {
         console.log(error);
         setError(error.message);
