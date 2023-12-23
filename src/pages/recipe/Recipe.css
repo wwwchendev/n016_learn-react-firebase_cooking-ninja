@@ -34,6 +34,10 @@
   cursor: pointer;
   filter: invert(60%);
 }
+.tagIcon{  
+  margin-right: 10px;
+  filter: invert(60%);
+}
 
 .recipe form{  
   color: #555;

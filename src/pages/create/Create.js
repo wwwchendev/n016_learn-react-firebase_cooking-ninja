@@ -1,40 +1,41 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 import './Create.css'
+import RecipeForm from '../../components/RecipeForm'
 // import { useFetch } from "../../hooks/useFetch"
 import { firestore } from '../../firebase/config';
 import { collection, addDoc, getDoc} from 'firebase/firestore';
 
 export default function Create() {
   //定義表單資料變數
-  const [title, setTitle] = useState('')
-  const [method, setMethod] = useState('')
-  const [cookingTime, setCookingTime] = useState('')
-  const [newIngredient, setNewIngredient] = useState('')
-  const [ingredients, setIngredients] = useState([])
+  // const [title, setTitle] = useState('')
+  // const [method, setMethod] = useState('')
+  // const [cookingTime, setCookingTime] = useState('')
+  // const [newIngredient, setNewIngredient] = useState('')
+  // const [ingredients, setIngredients] = useState([])
+  // const [tags, setTags] = useState([])
   //選取DOM元素
-  const ingredientInput = useRef(null)
-
+  // const ingredientInput = useRef(null)
   // const { postData, data } = useFetch('http://localhost:3000/recipes', 'POST')
   const navigate = useNavigate();
 
-  const addIngredient = (e) => {
-    e.preventDefault()
-    const ing = newIngredient.trim()
-    if (ing && !ingredients.includes(ing)) {
-      setIngredients(pre => [...pre, ing])
-    }      
-    setNewIngredient('')
-    ingredientInput.current.focus()
-  }
+  // const addIngredient = (e) => {
+  //   e.preventDefault()
+  //   const ing = newIngredient.trim()
+  //   if (ing && !ingredients.includes(ing)) {
+  //     setIngredients(pre => [...pre, ing])
+  //   }      
+  //   setNewIngredient('')
+  //   ingredientInput.current.focus()
+  // }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e,recipeInfo) => {
     e.preventDefault()
     // postData({ title, ingredients, method, cookingTime: cookingTime + ' 分鐘' })
-    const doc = { title, ingredients, method, cookingTime: cookingTime + ' 分鐘' }
+    // const doc = { title, ingredients, method, cookingTime: cookingTime + ' 分鐘' }
     try {
       const recipesCollectionRef = collection(firestore, 'recipes');
-      const res = await addDoc(recipesCollectionRef, doc);
+      const res = await addDoc(recipesCollectionRef, recipeInfo);
       const snapshot = await getDoc(res);
       alert(`已新增 ${snapshot.data().title} 的食譜`);
       navigate('/')
@@ -45,6 +46,17 @@ export default function Create() {
 
   return (
     <div className="create">
+      <RecipeForm
+        status={"create"}
+        data={{
+          title: '',
+          method: '',
+          cookingTime: '',
+          ingredients: [],
+          tags: []
+        }}
+        handleSubmit={handleSubmit}
+      />
       {/* <div>
         <p>{`食譜名稱: ${title}`}</p>
         <p>{`食譜成分: ${newIngredient}`}</p>
@@ -52,7 +64,7 @@ export default function Create() {
         <p>{`料理方法: ${method}`}</p>
         <p>{`上菜時間(分鐘): ${cookingTime}`}</p>
       </div> */}
-      <h2 className="page-title">和大家分享新食譜</h2>
+      {/* <h2 className="page-title">和大家分享新食譜</h2>
       <form onSubmit={handleSubmit}>
         <label>
           <span>食譜名稱:</span>
@@ -98,7 +110,7 @@ export default function Create() {
         </label>
 
         <button type='submit' className="btn">提交</button>
-      </form>
+      </form> */}
     </div>
   )
 }

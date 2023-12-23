@@ -5,6 +5,7 @@ import { useThemeContext } from '../../hooks/useThemeContext'
 import './Recipe.css'
 import editIcon from '../../assets/edit.svg'
 import closeIcon from '../../assets/close.svg'
+import tagIcon from '../../assets/tag.svg'
 
 import RecipeForm from '../../components/RecipeForm'
 
@@ -36,6 +37,7 @@ export default function Recipe() {
       if (snapshot.exists()) {
         setData(snapshot.data());
         setIsPending(false)
+        console.log(data);
       } else {
         setError(`找不到食譜資料`)
         setIsPending(false)
@@ -58,22 +60,27 @@ export default function Recipe() {
             <h2 className="page-title">{data.title}</h2>
             <p>上菜時間 {data.cookingTime}</p>
             <ul>
-              {data.ingredients.map(ingredient => (
+              <p>準備材料：</p>{data.ingredients.map(ingredient => (
                 <li key={ingredient}>{ingredient}</li>
               ))}
             </ul>
             <div className="method">{data.method}</div>
+            <ul>
+            <img className="tagIcon" src={tagIcon} alt="" />
+              {data.tags.map(tag => (
+                <li key={tag}>{tag}</li>
+              ))}
+            </ul>
           </>
         )}
       </>
     );
   };
-  const handleSubmit = async (e, title, ingredients, method, cookingTime) => {
+  const handleSubmit = async (e,recipeInfo) => {
     e.preventDefault()
-    const info = { title, ingredients, method, cookingTime: cookingTime + ' 分鐘' }
     try {
       const recipeRef = doc(firestore, 'recipes', id);
-      await updateDoc(recipeRef, info);
+      await updateDoc(recipeRef,recipeInfo);
       alert(`已保存變更`);
       setIsEdit(false);
       fetchData()
