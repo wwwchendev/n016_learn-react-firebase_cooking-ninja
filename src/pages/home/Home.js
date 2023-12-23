@@ -42,7 +42,9 @@ export default function Home() {
     // TODO onSnapshot
     // 在 onSnapshot 方法中，第一個參數是用於訂閱的集合的參考（reference），而第二個參數是一個回調函數，當集合中的文件發生變化時會被調用。
     // 每當集合中的文件新增、修改或刪除時，onSnapshot 的回調函數都會被觸發，並提供一個新的 snapshot，其中包含了更新後的集合狀態。
-    const unsubscribe = onSnapshot(collection(firestore, 'recipes'), (snapshot) => {
+    
+    const recipeRef = collection(firestore, 'recipes');
+    const unsubscribe = onSnapshot(recipeRef, (snapshot) => {
       if (snapshot.empty) {
         setError('沒有食譜資料可載入');
         setIsPending(false);

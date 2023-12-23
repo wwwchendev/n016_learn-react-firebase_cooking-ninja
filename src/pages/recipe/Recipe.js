@@ -11,7 +11,7 @@ import RecipeForm from '../../components/RecipeForm'
 
 // import { useFetch } from "../../hooks/useFetch"
 import { firestore } from '../../firebase/config';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { collection,doc, getDoc, updateDoc, onSnapshot } from 'firebase/firestore';
 // TODO Firebase Firestore
 // doc()： 用於創建指向特定文檔（Document）的引用。
 // getDoc()： 這個方法用於獲取特定文檔的快照。
@@ -29,28 +29,43 @@ export default function Recipe() {
   const [isEdit, setIsEdit] = useState(false)
 
 
-  // 宣告請求資料的函數
-  async function fetchData() {
-    try {
-      const recipeRef = doc(firestore, 'recipes', id);
-      const snapshot = await getDoc(recipeRef);
-      if (snapshot.exists()) {
-        setData(snapshot.data());
-        setIsPending(false)
-        console.log(data);
-      } else {
-        setError(`找不到食譜資料`)
-        setIsPending(false)
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  // // 宣告請求資料的函數
+  // async function fetchData() {
+  //   try {
+  //     const recipeRef = doc(firestore, 'recipes', id);
+  //     const snapshot = await getDoc(recipeRef);
+  //     if (snapshot.exists()) {
+  //       setData(snapshot.data());
+  //       setIsPending(false)
+  //       console.log(data);
+  //     } else {
+  //       setError(`找不到食譜資料`)
+  //       setIsPending(false)
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+  
   // 發送請求取得firebase資料庫內容
   useEffect(() => {
     setIsPending(true)
-    fetchData();
-  }, []);
+    // fetchData();
+    const recipeRef = doc(firestore, 'recipes', id);
+    const unsubscribe = onSnapshot(recipeRef, (doc) => {
+      if (doc.exists()) {
+        setData(doc.data());
+        setIsPending(false)
+      } else {
+        setError(`找不到食譜資料`)
+        setIsPending(false)
+        setData([]);
+        return;
+      }
+    });
+    // 返回取消訂閱的函數
+    return unsubscribe;
+  }, [id]);
 
   const RecipeInfo = () => {
     return (
@@ -83,7 +98,7 @@ export default function Recipe() {
       await updateDoc(recipeRef,recipeInfo);
       alert(`已保存變更`);
       setIsEdit(false);
-      fetchData()
+      // fetchData()
     } catch (error) {
       console.error('Error adding recipe:', error);
     }
@@ -94,7 +109,7 @@ export default function Recipe() {
       {error && <p className='error'>{error}</p>}
       {isPending && <p className='loading'>Loading...</p>}
       {data && isEdit ? <>
-        <RecipeForm id={id} data={data} setIsEdit={setIsEdit} handleSubmit={handleSubmit} fetchData={fetchData}/>
+        <RecipeForm id={id} data={data} setIsEdit={setIsEdit} handleSubmit={handleSubmit} />
         <img className="editIcon" src={closeIcon} alt="" onClick={() => { setIsEdit(false) }} />
       </> : <>
         <RecipeInfo />
